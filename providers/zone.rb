@@ -27,6 +27,10 @@ action :create do
 
   service "pdns"
 
+  execute "pdns_control notify #{new_resource.name}" do
+    action :nothing
+  end
+
   directory "#{Chef::Config[:file_cache_path]}/powerdns-zones/"
 
   serial =  Time.new.strftime("%Y%m%d%H%M%S")
@@ -50,7 +54,8 @@ action :create do
     cookbook  new_resource.cookbook
     mode      0644
     action    :create
-    notifies  :restart, resources(:service => "pdns")
+    notifies  :restart, "service[pdns]"
+    notifies  :run, "execute[pdns_control notify #{new_resource.name}]"
     variables(
       :domain => new_resource.name,
       :soa => new_resource.soa,
