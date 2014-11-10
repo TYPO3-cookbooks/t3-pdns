@@ -27,7 +27,7 @@ action :create do
 
   service "pdns"
 
-  execute "pdns_control notify #{new_resource.name}" do
+  execute "pdns_control reload" do
     action :nothing
   end
 
@@ -41,7 +41,6 @@ action :create do
     cookbook  new_resource.cookbook
     mode      0644
     action    :create
-    notifies  :restart, resources(:service => "pdns")
     variables(
       :serial => serial,
       :serial_modulo => serial.to_i % 2 ** 32 # modulo 2^32
@@ -54,8 +53,7 @@ action :create do
     cookbook  new_resource.cookbook
     mode      0644
     action    :create
-    notifies  :restart, "service[pdns]"
-    notifies  :run, "execute[pdns_control notify #{new_resource.name}]"
+    notifies  :run, "execute[pdns_control reload]"
     variables(
       :domain => new_resource.name,
       :soa => new_resource.soa,
@@ -85,7 +83,7 @@ action :delete do
 
   template "/etc/powerdns/zones/#{new_resource.name}.zone" do
     action :delete
-    notifies :restart, resources(:service => "pdns")
+    notifies  :run, "execute[pdns_control reload]"
   end
 
   ruby_block "delete zone file inclusion" do
