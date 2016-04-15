@@ -1,13 +1,6 @@
 require 'serverspec'
 
-include Serverspec::Helper::Exec
-include Serverspec::Helper::DetectOS
-
-RSpec.configure do |c|
-  c.before :all do
-    c.os = backend(Serverspec::Commands::Base).check_os
-  end
-end
+set :backend, :exec
 
 describe 'service pdns' do
   it 'should be enabled and running' do
@@ -16,13 +9,12 @@ describe 'service pdns' do
   end
 
   it 'should listen to port 53' do
-    expect(port 53).to be_listening.with# tcp
+    expect(port 53).to be_listening.with 'tcp'
   end
 
-  it 'should answer to DNS queries' do
+end
 
-    @cmd = "dig typo3.org @127.0.0.1"
-    # we search for the line "typo3.org IN A 1.2.3.4" (and match against the IP only)
-    expect(command @cmd).to return_stdout /typo3\.org\..*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
-  end
+# we search for the line "example.com IN A 1.2.3.4" (and match against the IP only)
+describe command("dig example.com @127.0.0.1") do
+  its(:stdout) { should match /example\.com\..*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ }
 end

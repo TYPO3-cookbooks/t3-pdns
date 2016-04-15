@@ -1,3 +1,5 @@
+include_recipe "t3-pdns::default"
+
 t3_pdns_zone "example.com" do
   soa            "ns"
   contact        "admin.example.com"
@@ -11,4 +13,5 @@ t3_pdns_zone "example.com" do
 end
 
 
-package "dnstools"
+# adds the `dig` command that we use in the serverspec tests
+package "dnsutils"
