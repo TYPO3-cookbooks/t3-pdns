@@ -6,7 +6,7 @@ provisioner:
   name: chef_zero
 
 platforms:
-  - name: debian-7.6
+  - name: debian-7.8
 
 # This fails for at the `pdns_control reload` step with
 # > Timeout error: Error from remote in receive(): Resource temporarily unavailable
