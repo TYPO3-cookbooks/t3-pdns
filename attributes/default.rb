@@ -3,6 +3,7 @@ include_attribute "pdns::server"
 
 # Listen on all Interfaces
 default["pdns"]["server"]["local_address"] = "0.0.0.0"
+default["pdns"]["server"]["local_ipv6"] = "::1 #{node[:ip6address]}"
 
 # Bind Backend related Configuration
 default["pdns"]["server_backend"] = "server"
