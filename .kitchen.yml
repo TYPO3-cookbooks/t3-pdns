@@ -10,10 +10,7 @@ verifier:
 
 platforms:
   - name: debian-7.8
-
-# This fails for at the `pdns_control reload` step with
-# > Timeout error: Error from remote in receive(): Resource temporarily unavailable
-#  - name: debian-8.2
+  - name: debian-8.5
 
 suites:
   - name: default
