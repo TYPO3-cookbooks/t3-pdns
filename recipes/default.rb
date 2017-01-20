@@ -7,11 +7,13 @@
 # 
 #
 
-include_recipe "pdns::server"
+include_recipe "pdns::default"
 
-# disable resolvconf which is not useful
-# @see https://github.com/opscode-cookbooks/pdns/pull/11
-resources("resolvconf[custom]").action :nothing
+# Zones (/etc/powerdns/zones.conf)
+file node['pdns']['authoritative']['config']['bind_config'] do
+  mode 0644
+  action :create_if_missing
+end
 
 # Zones Directory
 directory "/etc/powerdns/zones/" do
@@ -19,8 +21,3 @@ directory "/etc/powerdns/zones/" do
   recursive true
 end
 
-# Zones
-file "/etc/powerdns/zones/zones.conf" do
-  mode 0644
-  action :create_if_missing
-end

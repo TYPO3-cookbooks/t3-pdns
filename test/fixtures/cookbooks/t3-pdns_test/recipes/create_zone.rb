@@ -11,7 +11,3 @@ t3_pdns_zone "example.com" do
       {:name => "www", :type => "CNAME", :value => "example.org."},
     ])
 end
-
-
-# adds the `dig` command that we use in the serverspec tests
-package "dnsutils"
