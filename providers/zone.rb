@@ -91,7 +91,7 @@ action :create do
 
   ruby_block "delete zone file inclusion" do
     block do
-      fe = Chef::Util::FileEdit.new("/etc/powerdns/zones/zones.conf")
+      fe = Chef::Util::FileEdit.new(node['pdns']['authoritative']['config']['bind_config'])
       fe.insert_line_if_no_match(/zone "#{new_resource.name}"/,
                                  ['zone "',new_resource.name, '" in { type master; file "/etc/powerdns/zones/', new_resource.name, '.zone"; };'].join)
       fe.write_file
@@ -115,7 +115,7 @@ action :delete do
 
   ruby_block "delete zone file inclusion" do
     block do
-      fe = Chef::Util::FileEdit.new("/etc/powerdns/zones/zones.conf")
+      fe = Chef::Util::FileEdit.new(node['pdns']['authoritative']['config']['bind_config'])
       fe.search_file_delete_line(/zone "#{new_resource.name}"/)
       fe.write_file
     end
