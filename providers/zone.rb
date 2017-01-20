@@ -89,7 +89,7 @@ action :create do
     notifies :create, resources(:template => "/etc/powerdns/zones/#{new_resource.name}.zone"), :immediately
   end
 
-  ruby_block "delete zone file inclusion" do
+  ruby_block "add to zone to zone.conf file" do
     block do
       fe = Chef::Util::FileEdit.new(node['pdns']['authoritative']['config']['bind_config'])
       fe.insert_line_if_no_match(/zone "#{new_resource.name}"/,
