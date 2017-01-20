@@ -40,7 +40,7 @@ def reload_command
     "pdns_control bind-reload-now #{@new_resource.name}"
   else
     log "New zone #{@new_resource.name}. Adding."
-    "pdns_control bind-add-zone #{@new_resource.name}"
+    "pdns_control bind-add-zone #{@new_resource.name} /etc/powerdns/zones/#{new_resource.name}.zone"
   end
 
 end
