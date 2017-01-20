@@ -6,7 +6,7 @@ control 'pdns-1' do
   end
 
   # this is pretty ugly.. but well..
-  sleep 3
+  sleep 10
 
   describe service('pdns') do
     it { should be_running }
