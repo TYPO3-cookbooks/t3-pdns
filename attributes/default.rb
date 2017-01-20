@@ -1,25 +1,11 @@
+default['pdns']['flavor'] = 'authoritative'
+default['pdns']['authoritative']['config']['allow_recursion'] = '127.0.0.1'
+#<> Just a test value
+default['pdns']['authoritative']['config']['allow_axfr_ips'] = ['192.168.1.1']
+default['pdns']['authoritative']['config']['disable_axfr'] = false
 
-include_attribute "pdns::server"
+# default['pdns']['authoritative']['config']['local_ipv6'] = "::1 #{node[:ip6address]}"
+default['pdns']['authoritative']['config']['local_ipv6'] = "::"
 
-# Listen on all Interfaces
-default["pdns"]["server"]["local_address"] = "0.0.0.0"
-default["pdns"]["server"]["local_ipv6"] = "::1 #{node[:ip6address]}"
-
-# Bind Backend related Configuration
-default["pdns"]["server_backend"] = "server"
-default["pdns"]["server"]["launch"] = "bind"
-default["pdns"]["server"]["bind_config"] = "/etc/powerdns/zones/zones.conf"
-
-# disable some default Values which are not available in our Package
-default["pdns"]["server"]["experimental_direct_dnskey"] = nil
-default["pdns"]["server"]["experimental_json_interface"] = nil
-default["pdns"]["server"]["experimental_logfile"] = nil
-default["pdns"]["server"]["edns_subnet_option_number"] = nil
-default["pdns"]["server"]["max_ent_entries"] = nil
-default["pdns"]["server"]["searchdomains"] = nil
-
-# Master related Configuration
-default["pdns"]["server"]["master"] = "yes"
-default["pdns"]["server"]["disable_axfr"] = "no"
-default["pdns"]["server"]["allow_axfr_ips"] = ""
-
+#<> Bind zone configuration (override: this is set with default priority in the authoritative recipe)
+override['pdns']['authoritative']['config']['bind_config'] = '/etc/powerdns/zones.conf'

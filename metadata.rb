@@ -6,4 +6,4 @@ description      "Installs/Configures t3-pdns"
 long_description "Installs/Configures t3-pdns"
 version          "0.1.6"
 
-depends          "pdns", "~> 0.3.4"
+depends          "pdns", "= 2.4.1"
