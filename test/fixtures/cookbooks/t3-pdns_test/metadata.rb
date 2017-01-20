@@ -1,0 +1,6 @@
+name             "t3-pdns_test"
+maintainer       "TYPO3 Association"
+maintainer_email "steffen.gebert@typo3.org"
+license          "Apache 2.0"
+description      "Tests for t3-pdns"
+version          "0.0.0"
