@@ -4,6 +4,6 @@ maintainer_email "steffen.gebert@typo3.org"
 license          "Apache2"
 description      "Installs/Configures t3-pdns"
 long_description "Installs/Configures t3-pdns"
-version          "0.1.6"
+version          "1.0.0"
 
-depends          "pdns", "~> 0.3.4"
+depends          "pdns", "= 2.4.1"

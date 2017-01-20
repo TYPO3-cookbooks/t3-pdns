@@ -23,11 +23,34 @@ end
 
 use_inline_resources
 
+def load_current_resource
+  @current_resource = Chef::Resource::T3PdnsZone.new(new_resource.name)
+
+  @current_resource.name(new_resource.name)
+  @current_resource.exists = ::File.file?("/etc/powerdns/zones/#{new_resource.name}.zone")
+  @current_resource
+end
+
+# Returns the pdns_control reload command, depending on if
+# we create a new zone or update an existing one.
+def reload_command
+
+  if @current_resource.exists
+    log "Zone #{@new_resource.name} already exists. Doing reload."
+    "pdns_control bind-reload-now #{@new_resource.name}"
+  else
+    log "New zone #{@new_resource.name}. Adding."
+    "pdns_control bind-add-zone #{@new_resource.name} /etc/powerdns/zones/#{new_resource.name}.zone"
+  end
+
+end
+
 action :create do
 
   service "pdns"
 
-  execute "pdns_control reload" do
+  execute "reload via pdns_control" do
+    command reload_command
     action :nothing
   end
 
@@ -41,7 +64,7 @@ action :create do
     cookbook  new_resource.cookbook
     mode      0644
     action    :create
-    notifies  :run, "execute[pdns_control reload]"
+    notifies  :run, "execute[reload via pdns_control]"
     variables(
       :serial => serial,
       :serial_modulo => serial.to_i % 2 ** 32 # modulo 2^32
@@ -66,9 +89,9 @@ action :create do
     notifies :create, resources(:template => "/etc/powerdns/zones/#{new_resource.name}.zone"), :immediately
   end
 
-  ruby_block "delete zone file inclusion" do
+  ruby_block "add to zone to zone.conf file" do
     block do
-      fe = Chef::Util::FileEdit.new("/etc/powerdns/zones/zones.conf")
+      fe = Chef::Util::FileEdit.new(node['pdns']['authoritative']['config']['bind_config'])
       fe.insert_line_if_no_match(/zone "#{new_resource.name}"/,
                                  ['zone "',new_resource.name, '" in { type master; file "/etc/powerdns/zones/', new_resource.name, '.zone"; };'].join)
       fe.write_file
@@ -92,7 +115,7 @@ action :delete do
 
   ruby_block "delete zone file inclusion" do
     block do
-      fe = Chef::Util::FileEdit.new("/etc/powerdns/zones/zones.conf")
+      fe = Chef::Util::FileEdit.new(node['pdns']['authoritative']['config']['bind_config'])
       fe.search_file_delete_line(/zone "#{new_resource.name}"/)
       fe.write_file
     end

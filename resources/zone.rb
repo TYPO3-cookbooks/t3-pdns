@@ -37,3 +37,4 @@ attribute :cookbook,
           :kind_of        => String,
           :default        => "t3-pdns"
 
+attr_accessor :exists
