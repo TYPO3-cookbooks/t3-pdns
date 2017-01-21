@@ -97,6 +97,7 @@ action :create do
                                  ['zone "',new_resource.name, '" in { type master; file "/etc/powerdns/zones/', new_resource.name, '.zone"; };'].join)
       fe.write_file
     end
+    action :nothing
   end
 
 end
