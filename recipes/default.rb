@@ -7,6 +7,8 @@
 # 
 #
 
+include_recipe "t3-base"
+
 include_recipe "pdns::default"
 
 # Zones (/etc/powerdns/zones.conf)
@@ -21,3 +23,4 @@ directory "/etc/powerdns/zones/" do
   recursive true
 end
 
+include_recipe "zabbix-custom-checks::pdns" if node['t3-base']['flags']['production']

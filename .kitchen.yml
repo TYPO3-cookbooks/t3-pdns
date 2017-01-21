@@ -19,3 +19,11 @@ suites:
       - recipe[t3-pdns::default]
       - recipe[t3-pdns_test::default]
     attributes:
+  - name: monitoring
+    run_list:
+      - recipe[t3-pdns::default]
+      - recipe[t3-pdns_test::default]
+    attributes:
+      t3-base:
+        flags:
+          production: true
