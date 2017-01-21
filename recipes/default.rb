@@ -7,6 +7,8 @@
 # 
 #
 
+include_recipe "t3-base"
+
 include_recipe "pdns::default"
 
 # Zones (/etc/powerdns/zones.conf)
