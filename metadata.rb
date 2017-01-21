@@ -7,3 +7,4 @@ long_description "Installs/Configures t3-pdns"
 version          "1.0.3"
 
 depends          "pdns", "= 2.4.1"
+depends          "zabbix-custom-checks", "~> 0.2.6"

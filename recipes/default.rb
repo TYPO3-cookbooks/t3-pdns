@@ -21,3 +21,4 @@ directory "/etc/powerdns/zones/" do
   recursive true
 end
 
+include_recipe "zabbix-custom-checks::pdns" if node['t3-base']['flags']['production']
