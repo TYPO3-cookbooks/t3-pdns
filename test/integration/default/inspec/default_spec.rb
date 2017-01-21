@@ -35,10 +35,15 @@ control 'pdns-1' do
   node = json('/tmp/kitchen_chef_node.json').params
 
   # read out all IP addresses of this node
-  ips = node['automatic']['network']['interfaces'].map { |iface_name, iface_data|
-    iface_data['addresses'].select{ |address, address_data|
+  ips = node['automatic']['network']['interfaces'].select { |iface_name, iface_data|
+    # remove interfaces that have no address (e.g. because it's down)
+    iface_data.key? 'addresses'
+  }.map { |iface_name, iface_data|
+    # loop over all addresses
+    iface_data['addresses'].select { |address, address_data|
+      # pick only inet and inet6
       ['inet', 'inet6'].include? address_data['family']
-    }.keys.flatten
+    }.keys.flatten # keys are the addresses, flatten the array of arrays
   }
 
   # we search for the line 'example.com IN A 1.2.3.4' (and match against the IP only)
