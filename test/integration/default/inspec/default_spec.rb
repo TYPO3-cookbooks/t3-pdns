@@ -57,4 +57,8 @@ control 'pdns-1' do
     its('content') { should include 'allow-axfr-ips'}
     its('content') { should include 'master=yes'}
   end
+
+  describe file('/var/log/syslog') do
+    its('content') { should include 'Master/slave communicator launching' }
+  end
 end
