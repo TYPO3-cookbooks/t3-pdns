@@ -52,4 +52,9 @@ control 'pdns-1' do
       its(:stdout) { should match /example\.com\..*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ }
     end
   end
+
+  describe file('/etc/powerdns/pdns.conf') do
+    its('content') { should include 'allow-axfr-ips'}
+    its('content') { should include 'master=yes'}
+  end
 end
