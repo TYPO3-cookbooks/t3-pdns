@@ -1,7 +1,7 @@
 $ORIGIN <%= @domain %>
 $TTL <%= @global_ttl %>
 <%= "%-32s" % (@domain + ".") %>    IN           SOA <%= @soa %> <%= @contact %>. (
-                                                 <%%= @serial %> ; serial number of this zone file (equals <%%= @serial_modulo %>)
+                                                 <%%= @serial_modulo %> ; serial number of this zone file (modulo of timestamp <%%= @serial %>)
                                                  1D              ; slave refresh
                                                  1H              ; slave retry time in case of a problem
                                                  1W              ; slave expiration time
