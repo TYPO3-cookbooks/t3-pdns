@@ -9,7 +9,10 @@ verifier:
   name: inspec
 
 platforms:
-  - name: debian-8.6
+  - name: debian-9.1
+    run_list:
+      - recipe[apt]
+  - name: debian-8.9
     run_list:
       - recipe[apt]
 
