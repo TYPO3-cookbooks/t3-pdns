@@ -54,6 +54,11 @@ action :create do
     action :nothing
   end
 
+  execute "validate zone #{new_resource.name}" do
+    command "named-checkzone #{new_resource.name} #{Chef::Config[:file_cache_path]}/powerdns-zones/#{new_resource.name}.zone.test"
+    action :nothing
+  end
+
   directory "#{Chef::Config[:file_cache_path]}/powerdns-zones/"
 
   serial =  Time.new.strftime("%Y%m%d%H%M%S")
@@ -66,6 +71,19 @@ action :create do
     action    :create
     notifies  :run, "ruby_block[add #{new_resource.name} to zone.conf file]"
     notifies  :run, "execute[reload via pdns_control]"
+    variables(
+      :serial => serial,
+      :serial_modulo => serial.to_i % 2 ** 32 # modulo 2^32
+    )
+    action :nothing
+  end
+
+  template "#{Chef::Config[:file_cache_path]}/powerdns-zones/#{new_resource.name}.zone.test" do
+    source    "#{Chef::Config[:file_cache_path]}/powerdns-zones/#{new_resource.name}.zone.erb"
+    local     true
+    cookbook  new_resource.cookbook
+    mode      0644
+    action    :create
     variables(
       :serial => serial,
       :serial_modulo => serial.to_i % 2 ** 32 # modulo 2^32
@@ -87,6 +105,8 @@ action :create do
       :mail_exchange => new_resource.mail_exchange,
       :records => new_resource.records,
     )
+    notifies :create, resources(:template => "#{Chef::Config[:file_cache_path]}/powerdns-zones/#{new_resource.name}.zone.test"), :immediately
+    notifies :run, resources(:execute => "validate zone #{new_resource.name}"), :immediately
     notifies :create, resources(:template => "/etc/powerdns/zones/#{new_resource.name}.zone"), :immediately
   end
 
