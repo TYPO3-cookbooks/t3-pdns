@@ -56,7 +56,7 @@ action :create do
 
   directory "#{Chef::Config[:file_cache_path]}/powerdns-zones/"
 
-  serial =  Time.new.strftime("%Y%m%d%H%M%S")
+  serial = Time.now.to_i
 
   template "/etc/powerdns/zones/#{new_resource.name}.zone" do
     source    "#{Chef::Config[:file_cache_path]}/powerdns-zones/#{new_resource.name}.zone.erb"
@@ -68,7 +68,6 @@ action :create do
     notifies  :run, "execute[reload via pdns_control]"
     variables(
       :serial => serial,
-      :serial_modulo => serial.to_i % 2 ** 32 # modulo 2^32
     )
     action :nothing
   end
