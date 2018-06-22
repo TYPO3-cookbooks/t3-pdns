@@ -9,6 +9,8 @@
 
 include_recipe "t3-base"
 
+package 'bind9utils' # for named-checkzone
+
 include_recipe "pdns::default"
 
 # Zones (/etc/powerdns/zones.conf)
